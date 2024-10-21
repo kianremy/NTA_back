@@ -6,8 +6,8 @@ const session = require('express-session'); // For session management
 const app = express();
 const port = process.env.PORT || 3000;
 
-// MongoDB connection URI
-const uri = process.env.MONGODB_URI; // Use the environment variable for connection string
+// MongoDB connection URI (hardcoded)
+const uri = "mongodb+srv://ultanjim75nta:ntaClusterpassword@ntacluster.6fz5n.mongodb.net/NoteApp?retryWrites=true&w=majority&appName=NTAcluster";
 
 // Create a MongoClient
 const client = new MongoClient(uri, {
@@ -38,7 +38,7 @@ app.use(express.json());
 
 // Middleware for sessions
 app.use(session({
-  secret: process.env.JWT_SECRET, // Use the environment variable for session secret
+  secret: 'your_secret_key', // Change this to a strong secret
   resave: false,
   saveUninitialized: true,
 }));
