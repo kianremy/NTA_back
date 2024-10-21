@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // MongoDB connection URI
-const uri = "mongodb+srv://ultanjim75nta:ntaClusterpassword@ntacluster.6fz5n.mongodb.net/NoteApp?retryWrites=true&w=majority&appName=NTAcluster";
+const uri = process.env.MONGODB_URI; // Use the environment variable for connection string
 
 // Create a MongoClient
 const client = new MongoClient(uri, {
@@ -38,7 +38,7 @@ app.use(express.json());
 
 // Middleware for sessions
 app.use(session({
-  secret: 'your_secret_key', // Change this to a strong secret
+  secret: process.env.JWT_SECRET, // Use the environment variable for session secret
   resave: false,
   saveUninitialized: true,
 }));
@@ -108,7 +108,6 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
-
 // Sign In Route
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
@@ -138,7 +137,10 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-
+// New route to handle GET requests to the root
+app.get('/', (req, res) => {
+  res.send('Welcome to the Note App API!');
+});
 
 // Start the Express server
 app.listen(port, () => {
