@@ -1,10 +1,14 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); // Import ObjectId
-const bcrypt = require('bcrypt'); // For password hashing
-const session = require('express-session'); // For session management
+const cors = require('cors');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Use CORS middleware
+app.use(cors());
 
 // MongoDB connection URI (hardcoded)
 const uri = "mongodb+srv://ultanjim75nta:ntaClusterpassword@ntacluster.6fz5n.mongodb.net/NoteApp?retryWrites=true&w=majority&appName=NTAcluster";
