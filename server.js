@@ -3,10 +3,28 @@ const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const cors = require('cors'); // Import CORS
+const cors = require('cors'); // Don't forget to import cors
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Middleware for CORS
+app.use(cors());
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Middleware for sessions
+app.use(session({
+  secret: 'your_secret_key', // Change this to a strong secret
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// Route for the root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the Note App API!');
+});
 
 // MongoDB connection URI
 const uri = "mongodb+srv://ultanjim75nta:ntaClusterpassword@ntacluster.6fz5n.mongodb.net/NoteApp?retryWrites=true&w=majority&appName=NTAcluster";
@@ -35,19 +53,6 @@ async function connectToDatabase() {
 // Call the function to connect
 connectToDatabase();
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// Middleware for sessions
-app.use(session({
-  secret: 'your_secret_key', // Change this to a strong secret
-  resave: false,
-  saveUninitialized: true,
-}));
-
-// Add CORS middleware
-app.use(cors());
-
 // Signup route
 app.post('/signup', async (req, res) => {
   const { username, password } = req.body;
@@ -60,15 +65,12 @@ app.post('/signup', async (req, res) => {
     const existingUser = await usersCollection.findOne({ username });
 
     if (existingUser) {
-      // Username exists, send an alert message
       return res.json({ message: "Account already exists" });
     }
 
-    // Hash the password and save the new user
     const hashedPassword = await bcrypt.hash(password, 10);
     await usersCollection.insertOne({ username, password: hashedPassword });
 
-    // Send success message
     res.json({ message: "Signup successful" });
   } catch (error) {
     console.error("Error during signup:", error);
